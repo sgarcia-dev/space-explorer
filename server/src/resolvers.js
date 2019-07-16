@@ -1,3 +1,5 @@
+const { paginateResults } = require('./utils');
+
 /**
  * Apollo GraphQL resolver functions accept four arguments:
  * - parent: An object that contains the result returned from the resolver on the parent type
@@ -8,8 +10,26 @@
  */
 module.exports = {
   Query: {
-    launches: (parent, args, { dataSources }, info) =>
-      dataSources.launchAPI.getAllLaunches(),
+    launches: async (parent, { pageSize = 20, after }, { dataSources }, info) => {
+      const allLaunches = await dataSources.launchAPI.getAllLaunches();
+      // we want these in reverse chronological order
+      allLaunches.reverse();
+      const launches = paginateResults({
+        after,
+        pageSize,
+        results: allLaunches
+      });
+      return {
+        launches,
+        cursor: launches.length ? launches[launches.length - 1].cursor : null,
+        // if the cursor of the end of the paginated results is the same as the
+        // last item in _all_ results, then there are no more results after this
+        hasMore: launches.length
+          ? launches[launches.length - 1].cursor !==
+          allLaunches[allLaunches.length - 1].cursor
+          : false
+      };
+    },
     launch: (parent, { id }, { dataSources }, info) =>
       dataSources.launchAPI.getLaunchById({ launchId: id }),
     me: (parent, args, { dataSources }, info) => dataSources.userAPI.findOrCreateUser()
