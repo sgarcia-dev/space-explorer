@@ -16,6 +16,7 @@ const typeDefs = gql`
     bookTrips(launchIds: [ID]!): TripUpdateResponse!
     cancelTrip(launchId: ID!): TripUpdateResponse!
     login(email: String): String
+    missionPatch(mission: String, size: PatchSize): String
   }
 
   type Launch {
