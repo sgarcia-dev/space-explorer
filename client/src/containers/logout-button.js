@@ -11,7 +11,6 @@ export default function LogoutButton() {
       {client => (
         <StyledButton
           onClick={() => {
-
             client.writeData({ data: { isLoggedIn: false } });
             localStorage.clear();
           }}
@@ -23,6 +22,10 @@ export default function LogoutButton() {
     </ApolloConsumer>
   );
 }
+
+/**
+ * STYLED COMPONENTS USED IN THIS FILE ARE BELOW HERE
+ */
 
 const StyledButton = styled('button')(menuItemClassName, {
   background: 'none',

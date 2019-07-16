@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 import { LoginForm, Loading } from '../components';
 
-const LOGIN_USER = gql`
+export const LOGIN_USER = gql`
   mutation login($email: String!) {
     login(email: $email)
   }
@@ -16,7 +16,6 @@ export default function Login() {
       {client => (
         <Mutation
           mutation={LOGIN_USER}
-
           onCompleted={({ login }) => {
             localStorage.setItem('token', login);
             client.writeData({ data: { isLoggedIn: true } });
@@ -32,7 +31,6 @@ export default function Login() {
           }}
         </Mutation>
       )}
-
     </ApolloConsumer>
   );
 }
