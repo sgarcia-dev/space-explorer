@@ -14,7 +14,17 @@ const link = new HttpLink({
 
 const client = new ApolloClient({
   cache,
-  link
+  link,
+  headers: {
+    authorization: localStorage.getItem('token'),
+  },
+});
+
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem('token'),
+    cartItems: [],
+  },
 });
 
 ReactDOM.render(
